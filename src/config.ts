@@ -7,3 +7,12 @@ export const aliceLnd = {
   tls: String(process.env.ALICE_TLS_CERT_PATH),
   macaroonPath: String(process.env.ALICE_LND_MACAROON_PATH),
 };
+
+export const carolEclair = {
+  url: 'http://127.0.0.1:8283',
+  httpConfig: {
+    headers: {
+      Authorization: 'Basic OmVjbGFpcnB3',
+    },
+  },
+};
