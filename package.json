@@ -15,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.21",
+    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "4.14.0",
     "@typescript-eslint/parser": "4.14.0",
     "eslint": "7.18.0",
@@ -28,6 +29,7 @@
   "dependencies": {
     "@radar/lnrpc": "^0.11.1-beta.0",
     "axios": "^0.21.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "ws": "^7.4.2"
   }
 }

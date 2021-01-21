@@ -6,6 +6,27 @@ export enum Network {
 
 type Feature = { name: string; support: string /* enum? `optional`, ??? */ };
 
+export enum ChannelState {
+  WAIT_FOR_INIT_INTERNAL = 'WAIT_FOR_INIT_INTERNAL',
+  WAIT_FOR_OPEN_CHANNEL = 'WAIT_FOR_OPEN_CHANNEL',
+  WAIT_FOR_ACCEPT_CHANNEL = 'WAIT_FOR_ACCEPT_CHANNEL',
+  WAIT_FOR_FUNDING_INTERNAL = 'WAIT_FOR_FUNDING_INTERNAL',
+  WAIT_FOR_FUNDING_CREATED = 'WAIT_FOR_FUNDING_CREATED',
+  WAIT_FOR_FUNDING_SIGNED = 'WAIT_FOR_FUNDING_SIGNED',
+  WAIT_FOR_FUNDING_CONFIRMED = 'WAIT_FOR_FUNDING_CONFIRMED',
+  WAIT_FOR_FUNDING_LOCKED = 'WAIT_FOR_FUNDING_LOCKED',
+  NORMAL = 'NORMAL',
+  SHUTDOWN = 'SHUTDOWN',
+  NEGOTIATING = 'NEGOTIATING',
+  CLOSING = 'CLOSING',
+  CLOSED = 'CLOSED',
+  OFFLINE = 'OFFLINE',
+  SYNCING = 'SYNCING',
+  WAIT_FOR_REMOTE_PUBLISH_FUTURE_COMMITMENT = 'WAIT_FOR_REMOTE_PUBLISH_FUTURE_COMMITMENT',
+  ERR_FUNDING_LOST = 'ERR_FUNDING_LOST',
+  ERR_INFORMATION_LEAK = 'ERR_INFORMATION_LEAK',
+}
+
 // eclair-cli getinfo
 export type GetInfoResponse = {
   version: string;
@@ -798,3 +819,98 @@ export type UsableBalancesResponse = {
   canReceive: number;
   isPublic: boolean;
 }[];
+
+// Websocket events
+
+// payment-relayed - A payment has been successfully relayed
+export type PaymentRelayedWebSocketEvent = {
+  type: 'payment-relayed';
+  amountIn: number;
+  amountOut: number;
+  paymentHash: string;
+  fromChannelId: string;
+  toChannelId: string;
+  timestamp: number;
+};
+
+// payment-received - A payment has been received
+export type PaymentReceivedWebSocketEvent = {
+  type: 'payment-received';
+  paymentHash: string;
+  parts: {
+    amount: number;
+    fromChannelId: string;
+    timestamp: number;
+  }[];
+};
+
+// payment-sent	- A payment has been successfully sent
+export type PaymentSentWebSocketEvent = {
+  type: 'payment-sent';
+  id: string;
+  paymentHash: string;
+  paymentPreimage: string;
+  recipientAmount: number;
+  recipientNodeId: string;
+  parts: {
+    id: string;
+    amount: number;
+    feesPaid: number;
+    toChannelId: string;
+    timestamp: number;
+  }[];
+};
+
+// payment-settling-onchain	- A payment wasn't fulfilled and its HTLC is being redeemed on-chain
+export type PaymentSettlingOnChainWebSocketEvent = {
+  type: 'payment-settling-onchain';
+  id: string;
+  amount: number;
+  paymentHash: string;
+  timestamp: number;
+};
+
+// payment-failed - A payment failed
+export type PaymentFailedWebSocketEvent = {
+  type: 'payment-failed';
+  id: string;
+  paymentHash: string;
+  failures: []; // TODO: need this data format
+  timestamp: number;
+};
+
+// channel-opened - A channel opening flow has started
+export type ChannelOpenedWebSocketEvent = {
+  type: 'channel-opened';
+  remoteNodeId: string;
+  isFunder: boolean;
+  temporaryChannelId: string;
+  initialFeeratePerKw: number;
+  fundingTxFeeratePerKw: number;
+};
+
+// channel-state-changed - A channel state changed (e.g. going from offline to connected)
+export type ChannelStateChangedWebSocketEvent = {
+  type: 'channel-state-changed';
+  channelId: string;
+  remoteNodeId: string;
+  // TODO: No doubt there are other values that should go here:
+  previousState: ChannelState;
+  currentState: ChannelState;
+};
+
+// channel-closed - A channel has been closed
+export type ChannelClosedWebSocketEvent = {
+  type: 'channel-closed';
+  channelId: string;
+  closingType: 'MutualClose' /* TODO: no doubt there are more types */;
+};
+
+export type WebSocketEvent =
+  | PaymentReceivedWebSocketEvent
+  | PaymentSentWebSocketEvent
+  | PaymentSettlingOnChainWebSocketEvent
+  | PaymentFailedWebSocketEvent
+  | ChannelOpenedWebSocketEvent
+  | ChannelStateChangedWebSocketEvent
+  | ChannelClosedWebSocketEvent;
