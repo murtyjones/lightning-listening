@@ -10,9 +10,7 @@ export const aliceLnd = {
 
 export const carolEclair = {
   url: '127.0.0.1:8283',
-  httpConfig: {
-    headers: {
-      Authorization: 'Basic OmVjbGFpcnB3',
-    },
+  headers: {
+    Authorization: 'Basic OmVjbGFpcnB3',
   },
 };

@@ -1,6 +1,6 @@
 {
-  "name": "typescript-eslint-prettier-starter",
-  "version": "1.0.0",
+  "name": "lightning-listening",
+  "version": "0.5.0",
   "description": "",
   "main": "index.js",
   "scripts": {

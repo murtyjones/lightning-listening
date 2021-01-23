@@ -1,6 +1,5 @@
-import WebSocket from 'ws';
+import EclairTs from 'eclair-ts';
 import { carolEclair } from './config';
-import { WebSocketEvent } from './types/eclair-0.5.0';
 
 (async () => {
   //   const lnrpc = await createLnrpc(aliceLnd);
@@ -15,17 +14,14 @@ import { WebSocketEvent } from './types/eclair-0.5.0';
   //     null,
   //     carolEclair.httpConfig
   //   );
-  const socket = new WebSocket(`ws://${carolEclair.url}/ws`, {
-    headers: carolEclair.httpConfig.headers,
-  });
-  // Connection opened
-  socket.addEventListener('open', function (event) {
-    socket.send('Hello Server!');
-  });
+  const eclairTs = new EclairTs(carolEclair);
+  const info = await eclairTs.getInfo();
+  console.log('info about this node:');
+  console.log(info);
 
-  // Listen for messages
-  socket.addEventListener('message', function (event) {
-    const data = event.data as WebSocketEvent;
-    console.log('Message from server ', data);
+  const listener = eclairTs.listen();
+  listener.on('message', (data) => {
+    console.log('DATA');
+    console.log(data);
   });
 })();
