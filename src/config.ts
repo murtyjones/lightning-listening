@@ -9,8 +9,13 @@ export const aliceLnd = {
 };
 
 export const carolEclair = {
-  url: '127.0.0.1:8283',
+  url: String(process.env.CAROL_ECLAIR_HOST),
   headers: {
-    Authorization: 'Basic OmVjbGFpcnB3',
+    Authorization: `Basic ${process.env.CAROL_ECLAIR_BASIC_AUTH_HEADER}`,
   },
+};
+
+export const bobCLightning = {
+  url: String(process.env.BOB_CLIGHTNING_HOST),
+  macaroonPath: String(process.env.BOB_CLIGHTNING_MACAROON_PATH),
 };
