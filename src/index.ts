@@ -22,7 +22,31 @@ const eclairListen = async () => {
   });
 };
 
-const cLightningRequest = async (url: string, method: 'GET' | 'POST') => {
+interface CLightningListChannels {
+  id: string;
+  connected: boolean;
+  state: 'CHANNELD_NORMAL' | 'CHANNELD_AWAITING_LOCKIN' | 'ONCHAIN';
+  short_channel_id: string;
+  channel_id: string;
+  funding_txid: string;
+  private: boolean;
+  msatoshi_to_us: number;
+  msatoshi_total: number;
+  msatoshi_to_them: number;
+  their_channel_reserve_satoshis: number;
+  our_channel_reserve_satoshis: number;
+  spendable_msatoshi: number;
+  funding_allocation_msat: {
+    [key in string]: number;
+  };
+  direction: number;
+  alias: string;
+}
+
+const cLightningRequest = async (
+  url: string,
+  method: 'GET' | 'POST'
+): Promise<CLightningListChannels[]> => {
   const response = await axios.request({
     url,
     method,
